@@ -13,13 +13,13 @@ These exercises will create files and directories in your home directory. Don't 
 You're setting up a local development environment. Create the following structure:
 
 ```
-~/cloud86-training/
+~/linux-practice/
 ├── projects/
-│   ├── symfony-demo/
+│   ├── project-cloud86/
 │   │   ├── src/
-│   │   ├── public/
+│   │   ├── tests/
 │   │   └── config/
-│   └── php-basics/
+│   └── demo-app/
 ├── backups/
 └── temp/
 ```
@@ -30,7 +30,7 @@ You're setting up a local development environment. Create the following structur
 
 **Steps:**
 1. Navigate to your home directory
-2. Create the main `cloud86-training` folder
+2. Create the main `linux-practice` folder
 3. Create the nested structure shown above
 
 <details>
@@ -38,30 +38,30 @@ You're setting up a local development environment. Create the following structur
 
 ```bash
 cd ~
-mkdir -p cloud86-training/{projects/{symfony-demo/{src,public,config},php-basics},backups,temp}
+mkdir -p linux-practice/{projects/{project-cloud86/{src,tests,config},demo-app},backups,temp}
 ```
 
 Or step by step:
 ```bash
 cd ~
-mkdir cloud86-training
-cd cloud86-training
+mkdir linux-practice
+cd linux-practice
 mkdir projects backups temp
 cd projects
-mkdir symfony-demo php-basics
-cd symfony-demo
-mkdir src public config
+mkdir project-cloud86 demo-app
+cd project-cloud86
+mkdir src tests config
 ```
 </details>
 
 ## Exercise 2: Create Project Files
 
-In the `symfony-demo` directory, create these files:
-- `public/index.php`
-- `public/.htaccess`
-- `config/services.yaml`
-- `config/routes.yaml`
-- `README.md` (in the symfony-demo root)
+In the `project-cloud86` directory, create these files:
+- `README.md` (in the project-cloud86 root)
+- `src/app.py` (or app.js, main.go - your choice!)
+- `config/app.config`
+- `config/database.config`
+- `.gitignore`
 
 **Commands you'll need:**
 - `touch` to create files
@@ -73,9 +73,9 @@ In the `symfony-demo` directory, create these files:
 <summary>💡 Hint (click to reveal)</summary>
 
 ```bash
-cd ~/cloud86-training/projects/symfony-demo
-touch README.md
-touch public/index.php public/.htaccess config/services.yaml config/routes.yaml
+cd ~/linux-practice/projects/project-cloud86
+touch README.md .gitignore
+touch src/app.py config/app.config config/database.config
 ```
 </details>
 
@@ -87,14 +87,14 @@ Run these commands and observe the output. Make sure you understand what each on
 # 1. Where are you?
 pwd
 
-# 2. List everything in cloud86-training
-ls -la ~/cloud86-training
+# 2. List everything in linux-practice
+ls -la ~/linux-practice
 
-# 3. List the symfony-demo structure recursively
-ls -R ~/cloud86-training/projects/symfony-demo
+# 3. List the project-cloud86 structure recursively
+ls -R ~/linux-practice/projects/project-cloud86
 
 # 4. Show detailed info about config files
-ls -lh ~/cloud86-training/projects/symfony-demo/config
+ls -lh ~/linux-practice/projects/project-cloud86/config
 ```
 
 **Question to think about:** Why does `ls -la` show more files than `ls`?
@@ -102,17 +102,17 @@ ls -lh ~/cloud86-training/projects/symfony-demo/config
 <details>
 <summary>💡 Answer</summary>
 
-The `-a` flag shows hidden files (those starting with `.`). That's why you see `.htaccess` with `-a` but not without it.
+The `-a` flag shows hidden files (those starting with `.`). That's why you see `.gitignore` with `-a` but not without it.
 </details>
 
 ## Exercise 4: Copy Files for Backup
 
 Create a backup of your config files:
 
-1. Copy all files from `symfony-demo/config/` to `~/cloud86-training/backups/`
+1. Copy all files from `project-cloud86/config/` to `~/linux-practice/backups/`
 2. Rename the copies to include `.backup` before the extension:
-   - `services.yaml` → `services.backup.yaml`
-   - `routes.yaml` → `routes.backup.yaml`
+   - `app.config` → `app.backup.config`
+   - `database.config` → `database.backup.config`
 
 **Commands you'll need:**
 - `cp` to copy files
@@ -122,11 +122,11 @@ Create a backup of your config files:
 <summary>💡 Hint (click to reveal)</summary>
 
 ```bash
-cd ~/cloud86-training
-cp projects/symfony-demo/config/*.yaml backups/
+cd ~/linux-practice
+cp projects/project-cloud86/config/*.config backups/
 cd backups
-mv services.yaml services.backup.yaml
-mv routes.yaml routes.backup.yaml
+mv app.config app.backup.config
+mv database.config database.backup.config
 ```
 </details>
 
@@ -162,7 +162,7 @@ Let's simulate a real scenario: You've been testing and created some temporary f
 <summary>💡 Hint (click to reveal)</summary>
 
 ```bash
-cd ~/cloud86-training/temp
+cd ~/linux-practice/temp
 touch test1.log test2.log debug.txt cache.tmp
 mkdir logs
 mv *.log logs/
@@ -172,22 +172,22 @@ ls logs/
 ```
 </details>
 
-## Exercise 6: Real-World Scenario - Customer Project Setup
+## Exercise 6: Real-World Scenario - New Project Setup
 
-Imagine a customer wants to deploy a PHP application. You need to set up their directory structure.
+You're starting a new web application project. Set up a professional directory structure.
 
-**Task:** In `~/cloud86-training/projects/`, create a new customer project:
+**Task:** In `~/linux-practice/projects/`, create a new project:
 
 ```
-customer-site/
-├── public_html/
-│   ├── index.php
+web-app/
+├── public/
+│   ├── index.html
 │   └── assets/
 │       ├── css/
 │       └── js/
-├── logs/
+├── src/
 └── config/
-    └── database.php
+    └── app.config
 ```
 
 **Challenge:** Do this with as few commands as possible (aim for 3-4 commands total).
@@ -196,10 +196,10 @@ customer-site/
 <summary>💡 Efficient solution</summary>
 
 ```bash
-cd ~/cloud86-training/projects
-mkdir -p customer-site/{public_html/assets/{css,js},logs,config}
-cd customer-site
-touch public_html/index.php config/database.php
+cd ~/linux-practice/projects
+mkdir -p web-app/{public/assets/{css,js},src,config}
+cd web-app
+touch public/index.html config/app.config
 ```
 </details>
 
@@ -235,7 +235,7 @@ Look at the "real" time output from both commands.
 
 **Questions to answer:**
 1. Which was faster? By how much?
-2. Now imagine running `composer install` with hundreds of files - what would happen on `/mnt/c/`?
+2. Now imagine running package installs with hundreds of files - what would happen on `/mnt/c/`?
 3. What's the lesson for your daily work?
 
 **Clean up:**
@@ -254,143 +254,19 @@ The Linux filesystem (`~/perf-test-linux`) should be **significantly faster** - 
 **Real-world impact:** 
 - `git status` on `/mnt/c/`: 5 seconds
 - `git status` on `~/`: instant
-- `composer install` on `/mnt/c/`: 5+ minutes
-- `composer install` on `~/`: 30 seconds
+- Package installs on `/mnt/c/`: 5+ minutes
+- Package installs on `~/`: 30 seconds
 
 This isn't academic - it affects your daily productivity!
 </details>
 
-## Exercise 8: Hosting Troubleshooting Simulation (BONUS)
-
-This is a realistic scenario you'll face at Cloud86.io. A customer reports their site is broken after deployment.
-
-**Scenario:** A developer deployed a Symfony app but now the site shows a 500 error. You need to investigate the file structure.
-
-**Setup:**
-```bash
-cd ~/cloud86-training/projects
-
-# Create a "broken" deployment
-mkdir -p broken-site/{public,var/cache,var/log,src,config}
-cd broken-site
-
-# Create files
-touch public/index.php
-touch config/services.yaml
-touch src/Controller.php
-
-# Simulate a typical deployment structure
-ls -R
-```
-
-**Investigation tasks:**
-
-1. **Map the structure** - Use `ls -R` to see the entire directory tree
-2. **Find the document root** - Where should Apache/Nginx point? (Answer: `public/`)
-3. **Identify writable directories** - Which directories need write access? (Answer: `var/cache`, `var/log`)
-4. **Check for missing essentials** - Are `vendor/` and `.env` present? (They won't be - note this!)
-
-**Answer these questions:**
-
-<details>
-<summary>Q1: If the web server points to `/var/www/broken-site/` instead of `/var/www/broken-site/public/`, what would happen?</summary>
-
-**Problem:** The docroot is pointing to the application root instead of `public/`!
-
-**Result:** 
-- Visitors see directory listings or download raw PHP files
-- The app won't run because `index.php` is in `public/`, not the root
-- Security risk - exposes `.env`, config files, and source code
-
-**Fix in production:**
-```bash
-# Apache/Nginx should point to:
-DocumentRoot /var/www/broken-site/public
-# NOT:
-DocumentRoot /var/www/broken-site
-```
-
-This is one of the most common misconfigurations in hosting!
-</details>
-
-<details>
-<summary>Q2: What commands help you diagnose the structure quickly?</summary>
-
-```bash
-# See the full tree
-ls -R
-
-# Or with details (permissions, ownership)
-ls -laR
-
-# Check where you are
-pwd
-
-# If tree is installed (optional):
-tree -L 2
-```
-
-**In production:** You'll run `ls -la` in the vhost root to quickly verify structure and spot permission issues.
-</details>
-
-<details>
-<summary>Q3: Why are `vendor/` and `.env` missing?</summary>
-
-**Answer:** They're not in Git - and for good reasons!
-
-- `vendor/` is created by running `composer install` after deployment (contains dependencies)
-- `.env` contains sensitive credentials (database passwords, API keys)
-- Both are in `.gitignore` for security
-
-**In production after deployment:**
-```bash
-# Install dependencies
-composer install
-
-# Create production environment file
-cp .env.example .env
-# Then edit .env with production credentials (database host, passwords, etc.)
-
-# Clear cache
-php bin/console cache:clear --env=prod
-```
-
-Missing either of these causes 500 errors!
-</details>
-
-**The Safety Workflow in Action:**
-
-Before helping this customer, you'd:
-```bash
-# 1. Where am I?
-pwd
-# Output: /var/www/broken-site
-
-# 2. What's here?
-ls -la
-
-# 3. Check the structure
-ls -R
-
-# 4. Now diagnose and fix
-# (Check docroot, permissions, missing files)
-```
-
-**Clean up:**
-```bash
-cd ~/cloud86-training
-rm -rf projects/broken-site
-```
-
-**The lesson:** Understanding file structure lets you diagnose 80% of "site broken" issues in the first 30 seconds. Practice this mental model now - it's invaluable in production support!
-
 ## Validation
 
-Once you've completed all exercises, run the validation script:
+Once you've completed all exercises (1-7), run the validation script:
 
 ```bash
-cd ~/cloud86-training
-bash ../validate.sh
+cd ~/linux-practice
+bash ~/linux-fundamentals-wsl/modules/01-navigation-basics/validate.sh
 ```
 
 Or from the module directory:
@@ -405,7 +281,7 @@ bash validate.sh
 Once you've successfully validated your work, you can remove the training directory:
 
 ```bash
-rm -rf ~/cloud86-training
+rm -rf ~/linux-practice
 ```
 
 **⚠️ Warning:** Make sure validation passed before deleting! The validation script checks all your work.
@@ -418,12 +294,11 @@ After completing these exercises, ask yourself:
 2. Why is `mkdir -p` safer than just `mkdir` for nested directories?
 3. What's the difference between `cp` and `mv`?
 4. Why should you be extra careful with `rm -rf`?
+5. Why does file location matter so much in WSL2?
 
 ## What's Next?
 
-Module 2 will teach you DNS fundamentals - understanding how domain names resolve to IP addresses, which is critical when troubleshooting customer hosting issues.
-
-**Preview question:** Do you know what happens when someone types `cloud86.io` in their browser? We'll trace that entire journey in the next module!
+Module 2 will teach you Permissions & Ownership - understanding who can read, write, and execute files, which is critical for any development or system administration work.
 
 ---
 
