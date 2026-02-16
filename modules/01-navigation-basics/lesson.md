@@ -5,8 +5,8 @@
 
 ## Why This Matters
 
-As a developer at a hosting company, you'll spend a lot of time:
-- Navigating through customer codebases
+As a developer, you'll spend a lot of time:
+- Navigating through project codebases
 - Creating and organizing project files
 - Moving files between directories
 - Cleaning up temporary files
@@ -55,8 +55,8 @@ ls -lh              # Human-readable file sizes
 
 **Real-world example:**
 ```bash
-ls -lh /var/www/customer-site/public
-# See all files in a customer's public directory with readable sizes
+ls -lh ~/projects/my-app/src
+# See all source files with readable sizes
 ```
 
 ### cd - Change Directory
@@ -64,7 +64,7 @@ Navigate to different directories.
 
 ```bash
 cd /var/www         # Go to absolute path
-cd customer-site    # Go to subdirectory (relative path)
+cd my-project       # Go to subdirectory (relative path)
 cd ..               # Go up one level
 cd ~                # Go to your home directory
 cd -                # Go back to previous directory
@@ -89,7 +89,7 @@ Create a new empty file or update timestamp of existing file.
 
 ```bash
 touch README.md
-touch config.php database.php   # Create multiple files
+touch config.json database.sql   # Create multiple files
 ```
 
 ### cp - Copy Files/Directories
@@ -108,8 +108,8 @@ Move files or rename them.
 
 ```bash
 mv oldname.txt newname.txt              # Rename file
-mv file.txt /var/www/                   # Move file
-mv *.log /var/log/archive/              # Move all .log files
+mv file.txt ~/projects/                 # Move file
+mv *.log logs/archive/                  # Move all .log files
 ```
 
 **Gotcha:** `mv` doesn't need `-r` for directories - it just moves them.
@@ -161,26 +161,15 @@ mv oldfile.txt ~/.trash/
 # Empty trash manually when sure: rm -rf ~/.trash/*
 ```
 
-**Real hosting horror story:**
-```bash
-# Support engineer wanted to clean ONE site's cache:
-cd /var/www/site123/var/cache
-rm -rf *
-
-# But they were actually in the wrong directory:
-pwd
-# Output: /var/www  ← OH NO!
-
-# Result: ALL customer sites deleted
-# Lesson: ALWAYS run pwd before rm!
-```
+> **💼 Hosting Context:**  
+> In production environments, running `rm -rf *` in the wrong directory could delete an entire customer website or wipe all sites on a shared server. A support engineer once ran `rm -rf *` thinking they were in `/var/www/site123/var/cache` but were actually in `/var/www/` - deleting ALL customer sites! This is why the safety workflow is critical.
 
 ## Wildcards & Patterns
 
 Use wildcards to work with multiple files:
 
 ```bash
-*.php           # All files ending in .php
+*.py            # All files ending in .py
 test*           # All files starting with test
 file?.txt       # file1.txt, fileA.txt (single character)
 ```
@@ -188,50 +177,53 @@ file?.txt       # file1.txt, fileA.txt (single character)
 **Examples:**
 ```bash
 ls *.log                        # List all log files
-cp *.php backup/                # Copy all PHP files
+cp *.js backup/                 # Copy all JavaScript files
 rm temp*.txt                    # Remove all temp text files
 ```
 
 ## Practical Workflow Example
 
-Let's say you're setting up a new Symfony project structure (this is what you'll do at Cloud86.io):
+Let's say you're setting up a new project:
 
 ```bash
 # 1. Navigate to your projects folder (always use Linux filesystem!)
 cd ~/projects
 
-# 2. Create project structure - Symfony's typical layout
-mkdir -p symfony-app/{src,var/{cache,log},public,config}
+# 2. Create project structure
+mkdir -p project-cloud86/{src,tests,docs,config,scripts}
 
 # 3. Navigate into it
-cd symfony-app
+cd project-cloud86
 
 # 4. Check the structure you created
 ls -la
 
 # 5. Create some essential files
-touch public/index.php
-touch config/services.yaml
-touch .env .env.example
+touch README.md
+touch src/app.py              # Or app.js, main.go, etc.
+touch config/app.config
+touch .gitignore
 
 # 6. Verify everything is there
 ls -R
 ```
 
-**This mirrors real production structure:**
+**Typical project structure:**
 ```
-/var/www/customer-site/        ← Production root (your ~/projects/ equivalent)
-├── public/                     ← Document root (where Apache/Nginx points)
-│   └── index.php              ← Entry point for all requests
+project-cloud86/
 ├── src/                       ← Application code
-├── var/                       ← Runtime files
-│   ├── cache/                 ← Must be writable by web server!
-│   └── log/                   ← Must be writable by web server!
+├── tests/                     ← Test files
+├── docs/                      ← Documentation
 ├── config/                    ← Configuration files
-└── vendor/                    ← Dependencies (from composer)
+├── scripts/                   ← Helper scripts
+├── README.md                  ← Project description
+└── .gitignore                 ← Git ignore rules
 ```
 
-**Key concept for hosting:** The web server needs to READ most files, but WRITE to specific directories (`var/cache`, `var/log`, uploads). We'll cover permissions in Module 4.
+> **💼 Hosting Context:**  
+> In production, this structure might live at `/var/www/project-cloud86/`.  
+> A web server would have a "document root" pointing to a `public/` directory.  
+> We'll learn more about web-specific structures in Module 8.
 
 ## The Safety Workflow (Learn This Now!)
 
@@ -252,25 +244,14 @@ echo rm *.log          # Shows what would be deleted
 rm *.log
 ```
 
-**Why this matters at Cloud86.io:**
+**Why this matters:**
 
-In production hosting environments, running `rm -rf *` in the wrong directory could:
-- Delete an entire customer website
-- Wipe all sites on a shared server
-- Destroy critical system files
+In ANY environment (development, staging, production), running destructive commands in the wrong directory has consequences:
+- Development: Lost hours of work
+- Staging: Broken deployment pipelines
+- Production: Customer data loss, downtime, angry calls
 
-**Real example from production:**
-```bash
-# Developer meant to clean cache in one site:
-cd /var/www/customer-site/var/cache
-rm -rf *
-
-# But they were actually in:
-cd /var/www
-rm -rf *    # ← Just deleted ALL customer sites!
-```
-
-**Make it a habit NOW in WSL2** - it will save you (and customers) in production.
+**Make it a habit NOW in WSL2** - it will save you later.
 
 ## Common Mistakes to Avoid
 
@@ -318,7 +299,7 @@ rm -rf *    # ← Just deleted ALL customer sites!
    # OR set your editor to use LF (Unix) line endings
    ```
    
-   **Why it matters:** Production Linux servers expect LF line endings, not Windows CRLF. Get in the habit now!
+   **Why it matters:** Linux servers expect LF line endings, not Windows CRLF. Get in the habit now!
 
 ## WSL2 Specific Tips
 
@@ -330,11 +311,11 @@ WSL2 stores Linux files in a virtual disk (ext4.vhdx) that's optimized for Linux
 
 When you access Windows files through `/mnt/c/`, operations go through both Linux AND Windows file system layers, causing **massive slowdowns** - especially for:
 - `git status` and `git` operations
-- `composer install` 
-- Symfony cache operations
+- Package installations (`npm install`, `pip install`, etc.)
+- Build operations
 - Docker bind mounts
 
-**Real-world impact:** A `composer install` that takes 30 seconds in `~/projects/` might take 5+ minutes in `/mnt/c/`.
+**Real-world impact:** A package install that takes 30 seconds in `~/projects/` might take 5+ minutes in `/mnt/c/`.
 
 ### The Golden Rule
 
@@ -345,7 +326,7 @@ When you access Windows files through `/mnt/c/`, operations go through both Linu
 
 **DON'T:**
 - ❌ Store active projects in `/mnt/c/Users/YourName/`
-- ❌ Run `composer`, `npm`, or `git` commands on `/mnt/c/` files
+- ❌ Run package managers or git commands on `/mnt/c/` files
 - ❌ Use Windows Git on WSL projects (only use Git inside WSL)
 
 ### When You Need Windows Files
@@ -384,8 +365,8 @@ WSL2 runs as a lightweight VM with its own IP address. This means:
 
 ```bash
 # When you run a web server in WSL2:
-php -S localhost:8000
-# Or: symfony server:start
+python -m http.server 8000
+# Or: npm run dev
 
 # Windows USUALLY auto-forwards the port, so your Windows browser can access:
 # http://localhost:8000 ← This works most of the time
@@ -393,9 +374,7 @@ php -S localhost:8000
 
 **The tricky part:** If you need WSL2 to connect to something running on Windows (like a database), you can't use `localhost` - you'd need the Windows IP address.
 
-**For now:** Don't worry about this too much. We'll cover networking properly in Module 3. Just know that if `localhost` behaves weirdly, this is why.
-
-**Production mindset:** On real Linux servers, `localhost` always means "this machine only" - WSL2 actually teaches you the right mental model for hosting work!
+**For now:** Don't worry about this too much. We'll cover networking in Module 6. Just know that if `localhost` behaves weirdly, this is why.
 
 ## Quick Reference
 
@@ -403,7 +382,7 @@ php -S localhost:8000
 |---------|---------|---------|
 | `pwd` | Show current directory | `pwd` |
 | `ls` | List files | `ls -lah` |
-| `cd` | Change directory | `cd /var/www` |
+| `cd` | Change directory | `cd ~/projects` |
 | `mkdir` | Create directory | `mkdir -p path/to/dir` |
 | `touch` | Create file | `touch file.txt` |
 | `cp` | Copy | `cp -r source dest` |
