@@ -33,7 +33,6 @@ warn() {
     echo -e "${YELLOW}⚠${RESET} $1"
 }
 
-# Check functions - each validates ONE thing with clear feedback
 # Check if path exists with specific type and helpful feedback
 check_exists() {
     local path="$1"
@@ -91,7 +90,7 @@ echo "This script only READS files, never modifies them."
 echo ""
 
 # Set base directory (using proper quoting)
-BASE_DIR="$HOME/cloud86-training"
+BASE_DIR="$HOME/linux-practice"
 
 # Pre-flight check: Does base directory exist?
 if [[ ! -d "$BASE_DIR" ]]; then
@@ -111,7 +110,7 @@ fi
 # Verify we're on Linux filesystem, not Windows mount
 if [[ "$BASE_DIR" == /mnt/* ]]; then
     warn "Your training directory is on /mnt/ (Windows filesystem)"
-    warn "This works but will be SLOW. Consider moving to ~/cloud86-training"
+    warn "This works but will be SLOW. Consider moving to ~/linux-practice"
     warn "See: resources/troubleshooting-scenarios/wsl2-common-issues.md"
     echo ""
 fi
@@ -119,13 +118,13 @@ fi
 echo "Checking Exercise 1: Development Workspace Structure"
 echo "---------------------------------------------"
 
-check_exists "$BASE_DIR" "dir" "Main cloud86-training directory"
+check_exists "$BASE_DIR" "dir" "Main linux-practice directory"
 check_exists "$BASE_DIR/projects" "dir" "Projects directory"
-check_exists "$BASE_DIR/projects/symfony-demo" "dir" "Symfony demo directory"
-check_exists "$BASE_DIR/projects/symfony-demo/src" "dir" "Symfony src directory"
-check_exists "$BASE_DIR/projects/symfony-demo/public" "dir" "Symfony public directory"
-check_exists "$BASE_DIR/projects/symfony-demo/config" "dir" "Symfony config directory"
-check_exists "$BASE_DIR/projects/php-basics" "dir" "PHP basics directory"
+check_exists "$BASE_DIR/projects/project-cloud86" "dir" "project-cloud86 directory"
+check_exists "$BASE_DIR/projects/project-cloud86/src" "dir" "project-cloud86 src directory"
+check_exists "$BASE_DIR/projects/project-cloud86/tests" "dir" "project-cloud86 tests directory"
+check_exists "$BASE_DIR/projects/project-cloud86/config" "dir" "project-cloud86 config directory"
+check_exists "$BASE_DIR/projects/demo-app" "dir" "demo-app directory"
 check_exists "$BASE_DIR/backups" "dir" "Backups directory"
 check_exists "$BASE_DIR/temp" "dir" "Temp directory"
 
@@ -133,18 +132,29 @@ echo ""
 echo "Checking Exercise 2: Project Files"
 echo "---------------------------------------------"
 
-check_exists "$BASE_DIR/projects/symfony-demo/README.md" "file" "README.md"
-check_exists "$BASE_DIR/projects/symfony-demo/public/index.php" "file" "public/index.php"
-check_exists "$BASE_DIR/projects/symfony-demo/public/.htaccess" "file" "public/.htaccess"
-check_exists "$BASE_DIR/projects/symfony-demo/config/services.yaml" "file" "config/services.yaml"
-check_exists "$BASE_DIR/projects/symfony-demo/config/routes.yaml" "file" "config/routes.yaml"
+check_exists "$BASE_DIR/projects/project-cloud86/README.md" "file" "README.md"
+check_exists "$BASE_DIR/projects/project-cloud86/.gitignore" "file" ".gitignore"
+check_exists "$BASE_DIR/projects/project-cloud86/config/app.config" "file" "config/app.config"
+check_exists "$BASE_DIR/projects/project-cloud86/config/database.config" "file" "config/database.config"
+
+# Check for at least ONE source file (they can choose .py, .js, .go, etc.)
+if [[ -f "$BASE_DIR/projects/project-cloud86/src/app.py" ]] || \
+   [[ -f "$BASE_DIR/projects/project-cloud86/src/app.js" ]] || \
+   [[ -f "$BASE_DIR/projects/project-cloud86/src/main.go" ]] || \
+   [[ -f "$BASE_DIR/projects/project-cloud86/src/app"* ]]; then
+    pass "Source file in src/ directory"
+    ((PASSED++))
+else
+    fail "No source file found in src/ (expected app.py, app.js, or similar)"
+    ((FAILED++))
+fi
 
 echo ""
 echo "Checking Exercise 4: Backup Files"
 echo "---------------------------------------------"
 
-check_exists "$BASE_DIR/backups/services.backup.yaml" "file" "services.backup.yaml"
-check_exists "$BASE_DIR/backups/routes.backup.yaml" "file" "routes.backup.yaml"
+check_exists "$BASE_DIR/backups/app.backup.config" "file" "app.backup.config"
+check_exists "$BASE_DIR/backups/database.backup.config" "file" "database.backup.config"
 
 echo ""
 echo "Checking Exercise 5: Temp Directory Organization"
@@ -167,18 +177,18 @@ else
 fi
 
 echo ""
-echo "Checking Exercise 6: Customer Project Setup"
+echo "Checking Exercise 6: Web App Project Setup"
 echo "---------------------------------------------"
 
-check_exists "$BASE_DIR/projects/customer-site" "dir" "customer-site directory"
-check_exists "$BASE_DIR/projects/customer-site/public_html" "dir" "public_html directory"
-check_exists "$BASE_DIR/projects/customer-site/public_html/assets" "dir" "assets directory"
-check_exists "$BASE_DIR/projects/customer-site/public_html/assets/css" "dir" "css directory"
-check_exists "$BASE_DIR/projects/customer-site/public_html/assets/js" "dir" "js directory"
-check_exists "$BASE_DIR/projects/customer-site/logs" "dir" "logs directory"
-check_exists "$BASE_DIR/projects/customer-site/config" "dir" "config directory"
-check_exists "$BASE_DIR/projects/customer-site/public_html/index.php" "file" "index.php"
-check_exists "$BASE_DIR/projects/customer-site/config/database.php" "file" "database.php"
+check_exists "$BASE_DIR/projects/web-app" "dir" "web-app directory"
+check_exists "$BASE_DIR/projects/web-app/public" "dir" "public directory"
+check_exists "$BASE_DIR/projects/web-app/public/assets" "dir" "assets directory"
+check_exists "$BASE_DIR/projects/web-app/public/assets/css" "dir" "css directory"
+check_exists "$BASE_DIR/projects/web-app/public/assets/js" "dir" "js directory"
+check_exists "$BASE_DIR/projects/web-app/src" "dir" "src directory"
+check_exists "$BASE_DIR/projects/web-app/config" "dir" "config directory"
+check_exists "$BASE_DIR/projects/web-app/public/index.html" "file" "index.html"
+check_exists "$BASE_DIR/projects/web-app/config/app.config" "file" "app.config"
 
 echo ""
 echo "========================================="
@@ -205,7 +215,7 @@ if [[ $FAILED -eq 0 ]]; then
     echo "  1. Review any concepts that felt unclear"
     echo "  2. Practice these commands in different scenarios"
     echo "  3. Read: resources/troubleshooting-scenarios/wsl2-common-issues.md"
-    echo "  4. Move on to Module 2: DNS Fundamentals (coming soon)"
+    echo "  4. Move on to Module 2: Permissions & Ownership (coming soon)"
     echo ""
     echo "Clean up (optional):"
     echo "  rm -rf $BASE_DIR"
@@ -224,7 +234,7 @@ else
     echo "  5. Use ls and ls -la to see what you actually created"
     echo ""
     echo "Common mistakes:"
-    echo "  • Wrong directory: Make sure you're in ~/cloud86-training"
+    echo "  • Wrong directory: Make sure you're in ~/linux-practice"
     echo "  • Typos: Linux is case-sensitive (Test.txt ≠ test.txt)"
     echo "  • Working on /mnt/c/: Move to ~ for better performance"
     echo ""
