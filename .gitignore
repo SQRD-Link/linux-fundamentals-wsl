@@ -1,0 +1,25 @@
+# WSL/Linux specific
+*~
+.*.swp
+.*.swo
+
+# Student work directories (they create these during exercises)
+student-work/
+practice/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Temporary files
+*.tmp
+*.log
+.temp/
+
+# Don't ignore the sample logs in resources
+!resources/sample-logs/*.log
